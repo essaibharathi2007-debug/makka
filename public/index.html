@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>வி.கே.புரம் மக்கள் குரல் | V.K.Puram Makkal Kural</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@300;400;500;600;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" >
+
+  <!-- ✅ SESSION GUARD: login இல்லன்னா redirect, admin உம் allow -->
+  <script>
+    (function() {
+      try {
+        var sess = JSON.parse(localStorage.getItem('mk_session'));
+        if (!sess) { window.location.replace('login.html'); }
+        // admin & user both allowed
+      } catch(e) { window.location.replace('login.html'); }
+    })();
+  </script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="navbar">
+  <div class="nav-brand">
+    <div class="brand-icon">📢</div>
+    <div class="brand-text">
+      <span class="brand-ta"> வி.கே.புரம் மக்கள் குரல்</span>
+      <span class="brand-en"> V.K.Puram Makkal Kural</span>
+    </div>
+  </div>
+  <div class="nav-actions">
+    <button class="lang-toggle" id="langToggle" onclick="toggleLang()">
+      <span id="langLabel">English</span>
+    </button>
+    <button class="btn-nav" onclick="showPage('submit')">
+      <span data-ta="புகார் தெரிவி" data-en="File Complaint">புகார் தெரிவி</span>
+    </button>
+    <button class="btn-nav btn-ghost" onclick="showPage('track')">
+      <span data-ta="நிலை பார்" data-en="Track Status">நிலை பார்</span>
+    </button>
+    <!-- ✅ Admin button — only shown for admin session -->
+    <button id="adminBtnNav" class="btn-nav btn-ghost" onclick="checkAdminAccess()" style="display:none">
+      நிர்வாகம்
+    </button>
+    <!-- ✅ LOGOUT BUTTON -->
+    <button class="btn-nav btn-ghost" onclick="doLogout()" title="வெளியேறு / Logout" style="border-color:rgba(239,68,68,0.3);color:#ef4444">
+      <span>🚪 வெளியேறு</span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO PAGE -->
+<div id="page-home" class="page active">
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="hero-circle c1"></div>
+      <div class="hero-circle c2"></div>
+      <div class="hero-circle c3"></div>
+    </div>
+    <div class="hero-image">
+    <img src="/images/vijay.jpg" alt="Leader">
+</div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span data-ta="🏛️ உங்கள் குரலே மாற்றம்" data-en="🏛️ Your Voice, Real Change">🏛️ உங்கள் குரலே மாற்றம்</span>
+      </div>
+      <h1 class="hero-title">
+        <span class="title-line" data-ta="மக்கள்" data-en="Makkal">வி.கே.புரம்</span><br>
+        <span class="title-line" data-ta="மக்கள்" data-en="Makkal"> மக்கள்</span>
+        <span class="title-line accent" data-ta="குரல்" data-en="Kural">குரல்</span>
+      </h1>
+      <p class="hero-sub" data-ta="உங்கள் பகுதியில் உள்ள சிக்கல்களை இங்கே புகாரளிக்கலாம். குரல் குறிப்பு, படங்கள் உடன் புகார் தெரிவிக்கலாம்." data-en="Report issues in your area — with voice notes, images, and live tracking. Your complaint reaches the right authority.">உங்கள் பகுதியில் உள்ள சிக்கல்களை இங்கே புகாரளிக்கலாம். குரல் குறிப்பு, படங்கள் உடன் புகார் தெரிவிக்கலாம்.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showPage('submit')">
+          <span data-ta="📝 புகார் தெரிவி" data-en="📝 File Complaint">📝 புகார் தெரிவி</span>
+        </button>
+        <button class="btn-secondary" onclick="showPage('feed')">
+          <span data-ta="📋 எல்லா புகார்களும்" data-en="📋 All Complaints">📋 எல்லா புகார்களும்</span>
+        </button>
+      </div>
+      <div class="hero-stats" id="heroStats">
+        <div class="stat-card"><span class="stat-num" id="statTotal">-</span><span class="stat-label" data-ta="மொத்த புகார்கள்" data-en="Total Complaints">மொத்த புகார்கள்</span></div>
+        <div class="stat-card"><span class="stat-num" id="statPending">-</span><span class="stat-label" data-ta="நிலுவையில்" data-en="Pending">நிலுவையில்</span></div>
+        <div class="stat-card"><span class="stat-num" id="statResolved">-</span><span class="stat-label" data-ta="தீர்க்கப்பட்டது" data-en="Resolved">தீர்க்கப்பட்டது</span></div>
+        <div class="stat-card"><span class="stat-num" id="statUrgent">-</span><span class="stat-label" data-ta="அவசரம்" data-en="Urgent">அவசரம்</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORY GRID -->
+  <section class="categories-section">
+    <h2 class="section-title" data-ta="புகார் வகைகள்" data-en="Complaint Categories">புகார் வகைகள்</h2>
+    <div class="cat-grid">
+      <div class="cat-card" onclick="startComplaintWithCategory('road')"><div class="cat-icon">🛣️</div><span data-ta="சாலை" data-en="Road">சாலை</span></div>
+      <div class="cat-card" onclick="startComplaintWithCategory('water')"><div class="cat-icon">💧</div><span data-ta="குடிநீர்" data-en="Water">குடிநீர்</span></div>
+      <div class="cat-card" onclick="startComplaintWithCategory('electricity')"><div class="cat-icon">⚡</div><span data-ta="மின்சாரம்" data-en="Electricity">மின்சாரம்</span></div>
+      <div class="cat-card" onclick="startComplaintWithCategory('garbage')"><div class="cat-icon">🗑️</div><span data-ta="குப்பை" data-en="Garbage">குப்பை</span></div>
+      <div class="cat-card" onclick="startComplaintWithCategory('drainage')"><div class="cat-icon">🚰</div><span data-ta="வடிகால்" data-en="Drainage">வடிகால்</span></div>
+      <div class="cat-card" onclick="startComplaintWithCategory('streetlight')"><div class="cat-icon">💡</div><span data-ta="தெரு விளக்கு" data-en="Street Light">தெரு விளக்கு</span></div>
+      <div class="cat-card" onclick="startComplaintWithCategory('noise')"><div class="cat-icon">🔊</div><span data-ta="சத்தம்" data-en="Noise">சத்தம்</span></div>
+      <div class="cat-card" onclick="startComplaintWithCategory('pollution')"><div class="cat-icon">🌫️</div><span data-ta="மாசு" data-en="Pollution">மாசு</span></div>
+      <div class="cat-card" onclick="startComplaintWithCategory('corruption')"><div class="cat-icon">⚖️</div><span data-ta="ஊழல்" data-en="Corruption">ஊழல்</span></div>
+      <div class="cat-card" onclick="startComplaintWithCategory('health')"><div class="cat-icon">🏥</div><span data-ta="சுகாதாரம்" data-en="Health">சுகாதாரம்</span></div>
+      <div class="cat-card" onclick="startComplaintWithCategory('transport')"><div class="cat-icon">🚌</div><span data-ta="போக்குவரத்து" data-en="Transport">போக்குவரத்து</span></div>
+      <div class="cat-card" onclick="startComplaintWithCategory('other')"><div class="cat-icon">📌</div><span data-ta="மற்றவை" data-en="Other">மற்றவை</span></div>
+    </div>
+  </section>
+
+  <!-- RECENT COMPLAINTS FEED -->
+  <section class="recent-section">
+    <h2 class="section-title" data-ta="சமீபத்திய புகார்கள்" data-en="Recent Complaints">சமீபத்திய புகார்கள்</h2>
+    <div class="complaints-feed" id="recentFeed">
+      <div class="loading-dots"><span></span><span></span><span></span></div>
+    </div>
+    <button class="btn-loadmore" onclick="showPage('feed')">
+      <span data-ta="எல்லாவற்றையும் பார்" data-en="View All">எல்லாவற்றையும் பார்</span> →
+    </button>
+  </section>
+</div>
+
+<!-- SUBMIT COMPLAINT PAGE -->
+<div id="page-submit" class="page">
+  <div class="form-container">
+    <div class="form-header">
+      <button class="back-btn" onclick="showPage('home')">← <span data-ta="திரும்பு" data-en="Back">திரும்பு</span></button>
+      <h2 data-ta="புகார் தெரிவிக்க" data-en="File a Complaint">புகார் தெரிவிக்க</h2>
+    </div>
+
+    <form id="complaintForm" novalidate>
+      <!-- Section 1: Personal Info -->
+      <div class="form-section">
+        <h3 class="form-section-title">
+          <span class="step-num">1</span>
+          <span data-ta="தனிப்பட்ட விவரங்கள்" data-en="Personal Details">தனிப்பட்ட விவரங்கள்</span>
+        </h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label data-ta="பெயர் *" data-en="Name *">மனுதாரரின் பெயர் *</label>
+            <input type="text" id="f-name" name="name" required placeholder="உங்கள் பெயர்" />
+          </div>
+          <div class="form-group">
+            <label data-ta="தொலைபேசி *" data-en="Phone *">மனுதாரரின் தொலைபேசி *</label>
+            <input type="tel" id="f-phone" name="phone" required placeholder="9876543210" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label data-ta="தெரு*" data-en="street *">மனுதாரரின் தெரு *</label>
+            <input type="tel" id="f-street" name="street" required placeholder="சாலை தெரு" />
+          </div>
+          <div class="form-group">
+            <label data-ta="வார்டு*" data-en="Ward *">மனுதாரரின் வார்டு *</label>
+            <select id="f-ward" name="வார்டு" required>
+              <option value="">-- தேர்வு செய் --</option>
+              <option>வார்டு 1</option><option>வார்டு 2</option><option>வார்டு 3</option>
+              <option>வார்டு 4</option><option>வார்டு 5</option><option>வார்டு 6</option>
+              <option>வார்டு 7</option><option>வார்டு 8</option><option>வார்டு 9</option>
+              <option>வார்டு 10</option><option>வார்டு 11</option><option>வார்டு 12</option>
+              <option>வார்டு 13</option><option>வார்டு 14</option><option>வார்டு 15</option>
+              <option>வார்டு 16</option><option>வார்டு 17</option><option>வார்டு 18</option>
+              <option>வார்டு 19</option><option>வார்டு 20</option><option>வார்டு 21</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label data-ta="முழு முகவரி *" data-en="Full Address *">முழு முகவரி *</label>
+          <textarea id="f-address" name="address" required rows="2" placeholder="தெரு, ஊர், பகுதி..."></textarea>
+        </div>
+      </div>
+
+      <!-- Section 2: Complaint Details -->
+      <div class="form-section">
+        <h3 class="form-section-title">
+          <span class="step-num">2</span>
+          <span data-ta="புகார் விவரங்கள்" data-en="Complaint Details">புகார் விவரங்கள்</span>
+        </h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label data-ta="வகை *" data-en="Category *">வகை *</label>
+            <select id="f-category" name="category" required>
+              <option value="">-- வகை தேர்வு --</option>
+              <option value="road">🛣️ சாலை / Road</option>
+              <option value="water">💧 குடிநீர் / Water</option>
+              <option value="electricity">⚡ மின்சாரம் / Electricity</option>
+              <option value="garbage">🗑️ குப்பை / Garbage</option>
+              <option value="drainage">🚰 வடிகால் / Drainage</option>
+              <option value="streetlight">💡 தெரு விளக்கு / street Light</option>
+              <option value="noise">🔊 சத்தம் / Noise</option>
+              <option value="pollution">🌫️ மாசு / Pollution</option>
+              <option value="corruption">⚖️ ஊழல் / Corruption</option>
+              <option value="health">🏥 சுகாதாரம் / Health</option>
+              <option value="transport">🚌 போக்குவரத்து / Transport</option>
+              <option value="other">📌 மற்றவை / Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label data-ta="முன்னுரிமை *" data-en="Priority *">முன்னுரிமை *</label>
+            <select id="f-priority" name="priority" required>
+              <option value="low">🟢 குறைவான / Low</option>
+              <option value="medium" selected>🟡 நடுத்தர / Medium</option>
+              <option value="high">🟠 அதிக / High</option>
+              <option value="urgent">🔴 அவசரம் / Urgent</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label data-ta="தலைப்பு *" data-en="Title *">தலைப்பு *</label>
+          <input type="text" id="f-title" name="title" required placeholder="புகாரின் சுருக்கமான தலைப்பு..." />
+        </div>
+        <div class="form-group">
+          <label data-ta="விரிவான விளக்கம் *" data-en="Detailed Description *">விரிவான விளக்கம் *</label>
+          <textarea id="f-description" name="description" required rows="4" placeholder="சிக்கலை விரிவாக விளக்குங்கள்..."></textarea>
+        </div>
+        <div class="form-group">
+          <label data-ta="மொழி" data-en="Language">மொழி</label>
+          <div class="lang-radio">
+            <label class="radio-pill"><input type="radio" name="language" value="tamil" checked /> தமிழ்</label>
+            <label class="radio-pill"><input type="radio" name="language" value="english" /> English</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Media -->
+      <div class="form-section">
+        <h3 class="form-section-title">
+          <span class="step-num">3</span>
+          <span data-ta="ஆதாரங்கள் (விரும்பினால்)" data-en="Evidence (Optional)">ஆதாரங்கள் (விரும்பினால்)</span>
+        </h3>
+
+        <!-- Voice Note -->
+        <div class="form-group">
+          <label data-ta="🎙️ குரல் குறிப்பு" data-en="🎙️ Voice Note">🎙️ குரல் குறிப்பு</label>
+          <div class="voice-recorder" id="voiceRecorder">
+            <div class="voice-status" id="voiceStatus">
+              <div class="mic-icon">🎤</div>
+              <p data-ta="பதிவு செய்ய கீழே உள்ள பட்டனை அழுத்துங்கள்" data-en="Press button below to record">பதிவு செய்ய கீழே உள்ள பட்டனை அழுத்துங்கள்</p>
+            </div>
+            <div class="voice-controls">
+              <button type="button" id="recordBtn" class="btn-record" onclick="toggleRecording()">
+                <span id="recordBtnText" data-ta="⏺ பதிவு தொடங்கு" data-en="⏺ Start Recording">⏺ பதிவு தொடங்கு</span>
+              </button>
+              <span id="recordTimer" class="record-timer">00:00</span>
+            </div>
+            <div id="voicePreview" class="voice-preview hidden">
+              <audio id="voiceAudio" controls></audio>
+              <button type="button" class="btn-delete-voice" onclick="deleteVoice()">🗑️</button>
+            </div>
+            <input type="file" id="f-voiceNote" name="voiceNote" accept="audio/*" style="display:none" />
+          </div>
+        </div>
+
+        <!-- Images -->
+        <div class="form-group">
+          <label data-ta="📷 படங்கள் (அதிகபட்சம் 3)" data-en="📷 Images (max 3)">📷 படங்கள் (அதிகபட்சம் 3)</label>
+          <div class="image-upload-area" id="imageUploadArea" onclick="document.getElementById('f-images').click()">
+            <div class="upload-placeholder">
+              <span class="upload-icon">📸</span>
+              <p data-ta="படங்களை இங்கே இழுக்கவும் அல்லது கிளிக் செய்யவும்" data-en="Drag images here or click to upload">படங்களை இங்கே இழுக்கவும் அல்லது கிளிக் செய்யவும்</p>
+            </div>
+            <div class="image-previews" id="imagePreviews"></div>
+          </div>
+          <input type="file" id="f-images" name="images" accept="image/*" multiple style="display:none" onchange="handleImageSelect(event)" />
+        </div>
+      </div>
+
+      <div class="form-submit-area">
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <span data-ta="📨 புகார் அனுப்பு" data-en="📨 Submit Complaint">📨 புகார் அனுப்பு</span>
+        </button>
+      </div>
+    </form>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal hidden">
+      <div class="modal-box">
+        <div class="modal-icon">✅</div>
+        <h3 data-ta="புகார் பதிவாகியது!" data-en="Complaint Submitted!">புகார் பதிவாகியது!</h3>
+        <p data-ta="உங்கள் புகார் எண்:" data-en="Your Complaint ID:">உங்கள் புகார் எண்:</p>
+        <div class="complaint-id-box" id="successComplaintId"></div>
+        <p class="modal-note" data-ta="இந்த எண்ணை வைத்து நிலையை கண்காணிக்கலாம்" data-en="Use this ID to track your complaint status">இந்த எண்ணை வைத்து நிலையை கண்காணிக்கலாம்</p>
+        <div class="modal-btns">
+          <button class="btn-primary" onclick="copyId()"><span data-ta="📋 நகல் எடு" data-en="📋 Copy ID">📋 நகல் எடு</span></button>
+          <button class="btn-secondary" onclick="showPage('track')"><span data-ta="நிலை பார்" data-en="Track Status">நிலை பார்</span></button>
+          <button class="btn-ghost-sm" onclick="showPage('home')"><span data-ta="முகப்பு" data-en="Home">முகப்பு</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TRACK STATUS PAGE -->
+<div id="page-track" class="page">
+  <div class="track-container">
+    <button class="back-btn" onclick="showPage('home')">← <span data-ta="திரும்பு" data-en="Back">திரும்பு</span></button>
+    <h2 data-ta="புகார் நிலை கண்காணிப்பு" data-en="Track Complaint Status">புகார் நிலை கண்காணிப்பு</h2>
+    <div class="track-form">
+      <input type="text" id="trackInput" placeholder="VMK-2026-00001" />
+      <button class="btn-primary" onclick="trackComplaint()">
+        <span data-ta="🔍 தேடு" data-en="🔍 Search">🔍 தேடு</span>
+      </button>
+    </div>
+    <div id="trackResult"></div>
+  </div>
+</div>
+
+<!-- ALL COMPLAINTS FEED PAGE -->
+<div id="page-feed" class="page">
+  <div class="feed-container">
+    <div class="feed-header">
+      <button class="back-btn" onclick="showPage('home')">← <span data-ta="திரும்பு" data-en="Back">திரும்பு</span></button>
+      <h2 data-ta="அனைத்து புகார்களும்" data-en="All Complaints">அனைத்து புகார்களும்</h2>
+    </div>
+    <div class="filter-bar">
+      <select id="filterStatus" onchange="loadFeed()">
+        <option value="">எல்லா நிலைகளும் / All Status</option>
+        <option value="pending">நிலுவை / Pending</option>
+        <option value="inprogress">செயல்பாட்டில் / In Progress</option>
+        <option value="resolved">தீர்க்கப்பட்டது / Resolved</option>
+      </select>
+      <select id="filterCategory" onchange="loadFeed()">
+        <option value="">எல்லா வகைகளும் / All Categories</option>
+        <option value="road">சாலை</option>
+        <option value="water">குடிநீர்</option>
+        <option value="electricity">மின்சாரம்</option>
+        <option value="garbage">குப்பை</option>
+        <option value="drainage">வடிகால்</option>
+        <option value="streetlight">தெரு விளக்கு</option>
+        <option value="noise">சத்தம்</option>
+        <option value="pollution">மாசு</option>
+        <option value="corruption">ஊழல்</option>
+        <option value="health">சுகாதாரம்</option>
+        <option value="transport">போக்குவரத்து</option>
+        <option value="other">மற்றவை</option>
+      </select>
+      <select id="filterSort" onchange="loadFeed()">
+        <option value="-createdAt">புதியது முதலில் / Newest</option>
+        <option value="-upvotes">அதிக ஓட்டம் / Most Voted</option>
+        <option value="-views">அதிக பார்வை / Most Viewed</option>
+      </select>
+      <input type="text" id="filterSearch" placeholder="🔍 தேடல்..." oninput="loadFeed()" />
+    </div>
+    <div class="complaints-feed full" id="fullFeed">
+      <div class="loading-dots"><span></span><span></span><span></span></div>
+    </div>
+    <div class="pagination" id="pagination"></div>
+  </div>
+</div>
+
+<!-- ADMIN PAGE -->
+<div id="page-admin" class="page">
+  <div class="admin-container">
+    <button class="back-btn" onclick="showPage('home')">← <span data-ta="திரும்பு" data-en="Back">திரும்பு</span></button>
+    <h2>🛡️ <span data-ta="நிர்வாக பலகை" data-en="Admin Dashboard">நிர்வாக பலகை</span></h2>
+    <div class="admin-stats" id="adminStats">
+      <div class="loading-dots"><span></span><span></span><span></span></div>
+    </div>
+    <div class="admin-complaints" id="adminComplaints">
+      <div class="loading-dots"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div id="detailModal" class="modal hidden">
+  <div class="modal-box detail-box">
+    <button class="modal-close" onclick="closeDetail()">✕</button>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<div class="modal-overlay hidden" id="modalOverlay" onclick="closeModals()"></div>
+
+<script src="/js/app.js"></script>
+
+<script>
+  // ✅ PAGE LOAD: Admin button show/hide + session check
+  document.addEventListener("DOMContentLoaded", function () {
+    const btnNav = document.getElementById('adminBtnNav');
+    let sess = null;
+    try { sess = JSON.parse(localStorage.getItem('mk_session') || 'null'); } catch(e) {}
+
+    if (sess && sess.type === 'admin') {
+      if (btnNav) btnNav.style.display = "inline-block";
+    } else {
+      if (btnNav) btnNav.style.display = "none";
+    }
+  });
+
+  // ✅ Admin access check
+  function checkAdminAccess() {
+    let sess = null;
+    try { sess = JSON.parse(localStorage.getItem('mk_session') || 'null'); } catch(e) {}
+
+    if (!sess) {
+      window.location.href = "login.html";
+      return;
+    }
+    if (sess.type !== 'admin') {
+      alert("⛔ Admin access only! / நிர்வாகர் மட்டுமே அணுகலாம்");
+      return;
+    }
+    showPage('admin');
+  }
+
+  // ✅ Logout
+  function doLogout() {
+    localStorage.removeItem('mk_session');
+    window.location.replace('login.html');
+  }
+
+  // ✅ URL ?page=xxx இருந்தா அந்த page-க்கு jump
+  (function() {
+    var params = new URLSearchParams(window.location.search);
+    var page = params.get('page');
+    if (page) {
+      setTimeout(function() {
+        if (typeof showPage === 'function') showPage(page);
+      }, 150);
+    }
+  })();
+</script>
+</body>
+</html>

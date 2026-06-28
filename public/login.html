@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>உள்நுழைவு | Makkal Kural</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@300;400;500;600;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0c10;
+      --bg2: #111318;
+      --bg3: #181c24;
+      --surface: #1e2330;
+      --surface2: #252b3a;
+      --border: #2a3045;
+      --border2: #3a4060;
+      --accent: #f97316;
+      --accent2: #fb923c;
+      --green: #22c55e;
+      --yellow: #eab308;
+      --red: #ef4444;
+      --blue: #3b82f6;
+      --purple: #8b5cf6;
+      --text: #e8eaf0;
+      --text2: #9aa3b8;
+      --text3: #5a6480;
+      --font-ta: 'Noto Sans Tamil', sans-serif;
+      --font-en: 'DM Sans', sans-serif;
+      --font-display: 'Bebas Neue', sans-serif;
+      --radius: 12px;
+      --radius-lg: 20px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-ta);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .bg-orbs { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    .orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(90px); opacity: 0.10;
+      animation: float 10s ease-in-out infinite;
+    }
+    .orb1 { width: 600px; height: 600px; background: var(--accent); top: -200px; right: -150px; animation-delay: 0s; }
+    .orb2 { width: 500px; height: 500px; background: var(--purple); bottom: -150px; left: -100px; animation-delay: 4s; }
+    .orb3 { width: 350px; height: 350px; background: var(--blue); top: 50%; left: 45%; animation-delay: 7s; }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-25px) scale(1.04); }
+    }
+
+    .screen { display: none; min-height: 100vh; position: relative; z-index: 1; align-items: center; justify-content: center; padding: 24px; }
+    .screen.active { display: flex; }
+
+    /* LANDING */
+    #s-landing { flex-direction: column; text-align: center; }
+    .land-logo { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 32px; }
+    .land-icon-box {
+      width: 72px; height: 72px;
+      background: linear-gradient(135deg, var(--accent), #dc6d12);
+      border-radius: 20px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 34px;
+      box-shadow: 0 8px 40px rgba(249,115,22,0.35);
+    }
+    .land-name-box { text-align: left; }
+    .land-ta { display: block; font-size: 24px; font-weight: 700; color: var(--accent); font-family: var(--font-ta); }
+    .land-en { display: block; font-size: 32px; font-family: var(--font-display); letter-spacing: 3px; color: var(--text); line-height: 1; }
+    .land-tagline { font-size: 15px; color: var(--text2); max-width: 480px; margin: 0 auto 40px; line-height: 1.7; }
+    .land-tagline span { display: block; font-size: 13px; color: var(--text3); margin-top: 4px; font-family: var(--font-ta); }
+    .land-btns { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 400px; margin: 0 auto; }
+
+    .btn-land-primary {
+      padding: 16px 24px; border: none; border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), #dc6d12);
+      color: #fff; font-size: 15px; font-weight: 600;
+      cursor: pointer; font-family: var(--font-ta);
+      transition: all 0.25s; display: flex; align-items: center;
+      justify-content: center; gap: 10px;
+      box-shadow: 0 4px 20px rgba(249,115,22,0.35);
+    }
+    .btn-land-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(249,115,22,0.5); }
+
+    .btn-land-secondary {
+      padding: 16px 24px; border: 1px solid var(--border2); border-radius: 12px;
+      background: var(--surface); color: var(--text); font-size: 15px;
+      font-weight: 500; cursor: pointer; font-family: var(--font-ta);
+      transition: all 0.2s; display: flex; align-items: center;
+      justify-content: center; gap: 10px;
+    }
+    .btn-land-secondary:hover { border-color: var(--accent); background: rgba(249,115,22,0.07); }
+
+    .btn-land-admin {
+      padding: 12px 24px; border: 1px solid rgba(139,92,246,0.3); border-radius: 12px;
+      background: rgba(139,92,246,0.08); color: #a78bfa; font-size: 13px;
+      cursor: pointer; font-family: var(--font-ta);
+      transition: all 0.2s; display: flex; align-items: center;
+      justify-content: center; gap: 8px;
+    }
+    .btn-land-admin:hover { background: rgba(139,92,246,0.15); border-color: rgba(139,92,246,0.5); }
+
+    .divider { display: flex; align-items: center; gap: 12px; color: var(--text3); font-size: 12px; }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* AUTH CARD */
+    .auth-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 32px 28px 36px;
+      width: 100%; max-width: 460px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: var(--text3); font-size: 13px; cursor: pointer;
+      margin-bottom: 20px; border: none; background: none;
+      padding: 0; font-family: var(--font-ta); transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent); }
+    .auth-title { font-size: 24px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .auth-sub { font-size: 13px; color: var(--text3); margin-bottom: 24px; line-height: 1.6; }
+    .admin-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(139,92,246,0.12); border: 1px solid rgba(139,92,246,0.3);
+      border-radius: 8px; padding: 5px 12px;
+      font-size: 12px; color: #a78bfa; margin-bottom: 16px;
+    }
+
+    /* FORM */
+    .fgroup { margin-bottom: 16px; }
+    .fgroup label { display: block; font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 7px; letter-spacing: 0.3px; }
+    .finput {
+      width: 100%; padding: 12px 14px;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 10px; color: var(--text);
+      font-size: 14px; font-family: var(--font-ta);
+      outline: none; transition: border 0.2s, box-shadow 0.2s;
+    }
+    .finput:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(249,115,22,0.10); }
+    .finput::placeholder { color: var(--text3); font-size: 13px; }
+    .pw-wrap { position: relative; }
+    .pw-wrap .finput { padding-right: 46px; }
+    .eye-btn {
+      position: absolute; right: 13px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer;
+      color: var(--text3); font-size: 16px; padding: 4px; line-height: 1; transition: color 0.2s;
+    }
+    .eye-btn:hover { color: var(--text2); }
+    .pw-bars { display: flex; gap: 4px; margin-top: 6px; }
+    .pw-bar { flex: 1; height: 3px; border-radius: 2px; background: var(--border); transition: background 0.3s; }
+    .pw-bar.weak { background: var(--red); }
+    .pw-bar.medium { background: var(--yellow); }
+    .pw-bar.strong { background: var(--green); }
+    .pw-hint { font-size: 11px; color: var(--text3); margin-top: 4px; }
+    .uname-check { font-size: 11px; margin-top: 5px; }
+
+    /* BUTTONS */
+    .btn-submit {
+      width: 100%; padding: 14px; border: none; border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), #dc6d12);
+      color: #fff; font-size: 15px; font-weight: 700;
+      cursor: pointer; font-family: var(--font-ta);
+      transition: all 0.25s; margin-top: 4px;
+      box-shadow: 0 4px 20px rgba(249,115,22,0.3);
+    }
+    .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 8px 28px rgba(249,115,22,0.45); }
+    .btn-submit:active { transform: translateY(0); }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+    .btn-submit.admin-style {
+      background: linear-gradient(135deg, #7c3aed, #5b21b6);
+      box-shadow: 0 4px 20px rgba(139,92,246,0.3);
+    }
+    .btn-submit.admin-style:hover { box-shadow: 0 8px 28px rgba(139,92,246,0.45); }
+
+    .switch-link { text-align: center; margin-top: 18px; font-size: 13px; color: var(--text3); }
+    .switch-link a { color: var(--accent); cursor: pointer; font-weight: 600; text-decoration: none; }
+    .switch-link a:hover { text-decoration: underline; }
+
+    /* USER/ADMIN HOME */
+    #s-userhome, #s-adminhome { flex-direction: column; align-items: stretch; justify-content: flex-start; padding: 0; }
+    .topbar {
+      background: rgba(10,12,16,0.95); border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(16px); padding: 0 24px; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .topbar-brand { display: flex; align-items: center; gap: 12px; }
+    .topbar-icon {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), #dc6d12);
+      display: flex; align-items: center; justify-content: center; font-size: 18px;
+    }
+    .topbar-title { font-size: 16px; font-weight: 700; color: var(--accent); font-family: var(--font-ta); }
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+    .user-chip {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 30px; padding: 6px 14px 6px 8px;
+    }
+    .user-avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #dc6d12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: #fff;
+    }
+    .user-avatar.admin-av { background: linear-gradient(135deg, #7c3aed, #5b21b6); }
+    .user-uname { font-size: 13px; color: var(--text2); font-family: var(--font-en); }
+    .btn-logout {
+      padding: 7px 14px; border: 1px solid var(--border); border-radius: 8px;
+      background: none; color: var(--text3); font-size: 12px;
+      cursor: pointer; font-family: var(--font-ta); transition: all 0.2s;
+    }
+    .btn-logout:hover { border-color: var(--red); color: var(--red); }
+    .home-body { padding: 32px 24px; max-width: 900px; margin: 0 auto; width: 100%; }
+    .welcome-banner {
+      background: linear-gradient(135deg, rgba(249,115,22,0.12), rgba(249,115,22,0.04));
+      border: 1px solid rgba(249,115,22,0.25); border-radius: var(--radius-lg);
+      padding: 24px 28px; display: flex; align-items: center; gap: 20px; margin-bottom: 28px;
+    }
+    .welcome-banner.admin { background: linear-gradient(135deg, rgba(139,92,246,0.12), rgba(139,92,246,0.04)); border-color: rgba(139,92,246,0.25); }
+    .welcome-emoji { font-size: 42px; flex-shrink: 0; }
+    .welcome-text h2 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+    .welcome-text p { font-size: 13px; color: var(--text2); line-height: 1.6; }
+    .quick-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; margin-bottom: 28px; }
+    .quick-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 22px 18px;
+      cursor: pointer; transition: all 0.25s; text-align: center;
+    }
+    .quick-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(249,115,22,0.15); }
+    .quick-card-icon { font-size: 28px; margin-bottom: 10px; }
+    .quick-card-label { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+    .quick-card-sub { font-size: 11px; color: var(--text3); font-family: var(--font-en); }
+
+    /* Admin Table */
+    .admin-section {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 24px; overflow-x: auto;
+    }
+    .admin-section-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .count-pill {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 20px; padding: 2px 10px; font-size: 12px; font-weight: 400; color: var(--text2);
+    }
+    .user-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .user-table th {
+      text-align: left; padding: 10px 14px; color: var(--text3);
+      font-weight: 600; font-size: 11px; text-transform: uppercase;
+      letter-spacing: 0.5px; border-bottom: 1px solid var(--border); font-family: var(--font-en);
+    }
+    .user-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); color: var(--text2); }
+    .user-table td:first-child { color: var(--text); font-weight: 600; }
+    .user-table tr:last-child td { border-bottom: none; }
+    .user-table tr:hover td { background: rgba(249,115,22,0.03); }
+    .role-badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .role-user { background: rgba(34,197,94,0.12); color: var(--green); border: 1px solid rgba(34,197,94,0.25); }
+    .role-admin { background: rgba(139,92,246,0.12); color: #a78bfa; border: 1px solid rgba(139,92,246,0.25); }
+    .empty-table { text-align: center; padding: 32px; color: var(--text3); font-size: 13px; }
+
+    /* TOAST */
+    .toast-wrap { position: fixed; bottom: 24px; right: 24px; z-index: 999; display: flex; flex-direction: column; gap: 10px; }
+    .toast {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 14px 18px; font-size: 14px; max-width: 320px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5); animation: slideUp 0.3s ease;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .toast.success { border-left: 4px solid var(--green); }
+    .toast.error { border-left: 4px solid var(--red); }
+    .toast.info { border-left: 4px solid var(--blue); }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-6px)} 80%{transform:translateX(4px)} }
+    .shake { animation: shake 0.4s ease; }
+
+    /* Loading spinner */
+    .btn-loading { position: relative; pointer-events: none; }
+    .btn-loading::after {
+      content: ''; position: absolute; right: 16px; top: 50%;
+      transform: translateY(-50%); width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff; border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
+
+    @media (max-width: 520px) {
+      .auth-card { padding: 24px 18px 28px; }
+      .land-ta { font-size: 20px; }
+      .land-en { font-size: 26px; }
+      .welcome-banner { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-orbs">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- ========== LANDING ========== -->
+<div class="screen active" id="s-landing">
+  <div>
+    <div class="land-logo">
+      <div class="land-icon-box">📢</div>
+      <div class="land-name-box">
+        <span class="land-ta">வி.கே.புரம் மக்கள் குரல்</span>
+        <span class="land-en">V.K.Puram Makkal Kural</span>
+      </div>
+    </div>
+    <p class="land-tagline">
+      உங்கள் குரல் சரியான இடத்தை அடையும்.
+      <span>Your voice reaches the right authority.</span>
+    </p>
+    <div class="land-btns">
+      <button class="btn-land-primary" onclick="go('s-register')">
+        📝 &nbsp; புதியவர் பதிவு செய் &nbsp;·&nbsp; Register
+      </button>
+      <div class="divider">ஏற்கனவே கணக்கு உள்ளதா?</div>
+      <button class="btn-land-secondary" onclick="go('s-login')">
+        🔑 &nbsp; உள்நுழை &nbsp;·&nbsp; Login
+      </button>
+      <button id="adminBtn" class="btn-land-admin" onclick="go('s-admin')">
+  🛡️ &nbsp; நிர்வாகி உள்நுழைவு &nbsp;·&nbsp; Admin Login
+</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== REGISTER ========== -->
+<div class="screen" id="s-register">
+  <div class="auth-card">
+    <button class="back-link" onclick="go('s-landing')">← திரும்பு / Back</button>
+    <div class="auth-title">கணக்கு உருவாக்கு</div>
+    <div class="auth-sub">புகார் தெரிவிக்க பதிவு செய்யவும்<br>Create your account to file complaints</div>
+
+    <div class="fgroup">
+      <label>பெயர் / Name *</label>
+      <input class="finput" id="r-name" type="text" placeholder="உங்கள் பெயர்" />
+    </div>
+    <div class="fgroup">
+      <label>தொலைபேசி / Phone *</label>
+      <input class="finput" id="r-phone" type="tel" placeholder="9876543210" maxlength="10" />
+    </div>
+    <div class="fgroup">
+      <label>பயனர் பெயர் / Username *</label>
+      <input class="finput" id="r-username" type="text" placeholder="yourname123" oninput="checkUname(this.value)" />
+      <div class="uname-check" id="uname-msg"></div>
+    </div>
+    <div class="fgroup">
+      <label>கடவுச்சொல் / Password *</label>
+      <div class="pw-wrap">
+        <input class="finput" id="r-password" type="password" placeholder="குறைந்தது 6 எழுத்துகள்" oninput="checkPw(this.value)" />
+        <button class="eye-btn" type="button" onclick="toggleEye('r-password',this)">👁</button>
+      </div>
+      <div class="pw-bars"><div class="pw-bar" id="pb1"></div><div class="pw-bar" id="pb2"></div><div class="pw-bar" id="pb3"></div></div>
+      <div class="pw-hint" id="pw-hint"></div>
+    </div>
+    <div class="fgroup">
+      <label>கடவுச்சொல் உறுதி / Confirm Password *</label>
+      <div class="pw-wrap">
+        <input class="finput" id="r-confirm" type="password" placeholder="மீண்டும் உள்ளிடவும்" />
+        <button class="eye-btn" type="button" onclick="toggleEye('r-confirm',this)">👁</button>
+      </div>
+    </div>
+
+    <button class="btn-submit" id="registerBtn" onclick="doRegister()">
+      ✅ &nbsp; கணக்கு உருவாக்கு · Create Account
+    </button>
+    <div class="switch-link">
+      ஏற்கனவே உள்ளீர்களா? <a onclick="go('s-login')">Login செய்யவும்</a>
+    </div>
+  </div>
+</div>
+
+<!-- ========== LOGIN ========== -->
+<div class="screen" id="s-login">
+  <div class="auth-card">
+    <button class="back-link" onclick="go('s-landing')">← திரும்பு / Back</button>
+    <div class="auth-title">உள்நுழைவு</div>
+    <div class="auth-sub">மீண்டும் வருக! தொடர உள்நுழைக.<br>Welcome back! Sign in to continue.</div>
+
+    <div class="fgroup">
+      <label>பயனர் பெயர் / Username</label>
+      <input class="finput" id="l-username" type="text" placeholder="yourname123"
+        onkeydown="if(event.key==='Enter') document.getElementById('l-password').focus()" />
+    </div>
+    <div class="fgroup">
+      <label>கடவுச்சொல் / Password</label>
+      <div class="pw-wrap">
+        <input class="finput" id="l-password" type="password" placeholder="••••••••"
+          onkeydown="if(event.key==='Enter') doLogin()" />
+        <button class="eye-btn" type="button" onclick="toggleEye('l-password',this)">👁</button>
+      </div>
+    </div>
+
+    <button class="btn-submit" id="loginBtn" onclick="doLogin()">
+      🔑 &nbsp; உள்நுழை · Login
+    </button>
+    <div class="switch-link">
+      கணக்கு இல்லையா? <a onclick="go('s-register')">Register செய்யவும்</a>
+    </div>
+  </div>
+</div>
+
+<!-- ========== ADMIN LOGIN ========== -->
+<div class="screen" id="s-admin">
+  <div class="auth-card">
+    <button class="back-link" onclick="go('s-landing')">← திரும்பு / Back</button>
+    <div class="admin-badge">🛡️ Administrator Access Only</div>
+    <div class="auth-title">Admin Login</div>
+    <div class="auth-sub">நிர்வாகர் மட்டுமே அணுகலாம் / Restricted access</div>
+
+    <div class="fgroup">
+      <label>Admin Username</label>
+      <input class="finput" id="a-username" type="text" placeholder="admin"
+        onkeydown="if(event.key==='Enter') document.getElementById('a-password').focus()" />
+    </div>
+    <div class="fgroup">
+      <label>Admin Password</label>
+      <div class="pw-wrap">
+        <input class="finput" id="a-password" type="password" placeholder="••••••••"
+          onkeydown="if(event.key==='Enter') doAdminLogin()" />
+        <button class="eye-btn" type="button" onclick="toggleEye('a-password',this)">👁</button>
+      </div>
+    </div>
+
+    <!-- ✅ FIX: onclick="doAdminLogin()" சேர்க்கப்பட்டது -->
+    <button class="btn-submit admin-style" id="adminLoginBtn" onclick="doAdminLogin()">
+      🛡️ &nbsp; Admin Login
+    </button>
+    <div class="switch-link">
+      <a onclick="go('s-landing')" style="color:var(--text3);font-size:12px">← Back to main</a>
+    </div>
+  </div>
+</div>
+
+<!-- ========== USER HOME ========== -->
+<div class="screen" id="s-userhome">
+  <div class="topbar">
+    <div class="topbar-brand">
+      <div class="topbar-icon">📢</div>
+      <div class="topbar-title">மக்கள் குரல்</div>
+    </div>
+    <div class="topbar-right">
+      <div class="user-chip">
+        <div class="user-avatar" id="user-av">U</div>
+        <span class="user-uname" id="user-uname-disp">user</span>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">← வெளியேறு</button>
+    </div>
+  </div>
+  <div class="home-body">
+    <div class="welcome-banner">
+      <div class="welcome-emoji">🎉</div>
+      <div class="welcome-text">
+        <h2 id="user-welcome-msg">வணக்கம்!</h2>
+        <p>உள்நுழைவு வெற்றிகரமாக முடிந்தது.<br>Login successful! Redirecting to main app...</p>
+      </div>
+    </div>
+    <div class="quick-grid">
+      <div class="quick-card" onclick="goToApp('submit')">
+        <div class="quick-card-icon">📝</div>
+        <div class="quick-card-label">புகார் தெரிவி</div>
+        <div class="quick-card-sub">File a Complaint</div>
+      </div>
+      <div class="quick-card" onclick="goToApp('track')">
+        <div class="quick-card-icon">🔍</div>
+        <div class="quick-card-label">நிலை பார்</div>
+        <div class="quick-card-sub">Track Status</div>
+      </div>
+      <div class="quick-card" onclick="goToApp('feed')">
+        <div class="quick-card-icon">📋</div>
+        <div class="quick-card-label">எல்லா புகார்கள்</div>
+        <div class="quick-card-sub">All Complaints</div>
+      </div>
+      <div class="quick-card" onclick="goToApp('home')">
+        <div class="quick-card-icon">🏠</div>
+        <div class="quick-card-label">முகப்பு</div>
+        <div class="quick-card-sub">Go to Home</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== ADMIN HOME ========== -->
+<div class="screen" id="s-adminhome">
+  <div class="topbar">
+    <div class="topbar-brand">
+      <div class="topbar-icon" style="background:linear-gradient(135deg,#7c3aed,#5b21b6)">🛡️</div>
+      <div class="topbar-title" style="color:#a78bfa">Admin Dashboard</div>
+    </div>
+    <div class="topbar-right">
+      <div class="user-chip">
+        <div class="user-avatar admin-av">A</div>
+        <span class="user-uname">Administrator</span>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">← வெளியேறு</button>
+    </div>
+  </div>
+  <div class="home-body">
+    <div class="welcome-banner admin">
+      <div class="welcome-emoji">🛡️</div>
+      <div class="welcome-text">
+        <h2>Admin Control Panel</h2>
+        <p>நிர்வாக பலகையில் உள்நுழைந்தீர்கள். பயனர்களை நிர்வகிக்கலாம்.<br>
+        Full admin access. Manage users & complaints below.</p>
+      </div>
+    </div>
+    <div class="quick-grid" style="margin-bottom:28px">
+      <div class="quick-card" onclick="window.location.href='index.html?page=admin'" style="border-color:rgba(139,92,246,0.2)">
+        <div class="quick-card-icon">📊</div>
+        <div class="quick-card-label">Complaint Dashboard</div>
+        <div class="quick-card-sub">View & manage all</div>
+      </div>
+      <div class="quick-card" onclick="window.location.href='index.html'">
+        <div class="quick-card-icon">🏠</div>
+        <div class="quick-card-label">முகப்பு</div>
+        <div class="quick-card-sub">Go to main app</div>
+      </div>
+    </div>
+    <div class="admin-section">
+      <div class="admin-section-title">
+        👥 பதிவான பயனர்கள்
+        <span class="count-pill" id="admin-user-count">0</span>
+      </div>
+      <div id="admin-user-table-wrap"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ============ CONFIG ============
+  const ADMIN_USER = 'admin';
+  const ADMIN_PASS = 'admin@123'; // ← உங்கள் admin password மாத்தலாம்
+  const MAIN_APP   = 'index.html';
+
+  // ============ STORAGE HELPERS ============
+  function getUsers() {
+    try { return JSON.parse(localStorage.getItem('mk_users') || '[]'); } catch { return []; }
+  }
+  function saveUsers(u) { localStorage.setItem('mk_users', JSON.stringify(u)); }
+  function setSession(data) { localStorage.setItem('mk_session', JSON.stringify(data)); }
+  function getSession() { try { return JSON.parse(localStorage.getItem('mk_session')); } catch { return null; } }
+  function clearSession() { localStorage.removeItem('mk_session'); }
+
+  // ============ NAVIGATION ============
+  function go(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function goToApp(page) {
+    window.location.href = MAIN_APP + (page && page !== 'home' ? '?page=' + page : '');
+  }
+
+  // ============ EYE TOGGLE ============
+  function toggleEye(id, btn) {
+    const el = document.getElementById(id);
+    el.type = el.type === 'password' ? 'text' : 'password';
+    btn.textContent = el.type === 'password' ? '👁' : '🙈';
+  }
+
+  // ============ PASSWORD STRENGTH ============
+  function checkPw(val) {
+    const bars = ['pb1','pb2','pb3'].map(id => document.getElementById(id));
+    const hint = document.getElementById('pw-hint');
+    bars.forEach(b => b.className = 'pw-bar');
+    if (!val) { hint.textContent = ''; return; }
+    let score = 0;
+    if (val.length >= 6) score++;
+    if (val.length >= 10) score++;
+    if (/[A-Z]/.test(val) || /[0-9]/.test(val) || /[^a-zA-Z0-9]/.test(val)) score++;
+    const levels = [['',''],['weak','பலவீனம் / Weak'],['medium','நடுத்தர / Medium'],['strong','வலிமையான / Strong']];
+    const [cls, lbl] = levels[Math.min(score, 3)];
+    for (let i = 0; i < score; i++) bars[i].classList.add(cls);
+    hint.textContent = lbl;
+    hint.style.color = cls === 'weak' ? 'var(--red)' : cls === 'medium' ? 'var(--yellow)' : 'var(--green)';
+  }
+
+  // ============ USERNAME CHECK ============
+  function checkUname(val) {
+    const el = document.getElementById('uname-msg');
+    if (!val) { el.textContent = ''; return; }
+    if (val.length < 3) { el.style.color = 'var(--red)'; el.textContent = '⚠ குறைந்தது 3 எழுத்துகள் / Min 3 chars'; return; }
+    if (!/^[a-zA-Z0-9_]+$/.test(val)) { el.style.color = 'var(--red)'; el.textContent = '⚠ Letters, numbers, underscore only'; return; }
+    const taken = getUsers().some(u => u.username.toLowerCase() === val.toLowerCase());
+    if (taken) { el.style.color = 'var(--red)'; el.textContent = '⚠ இந்த பெயர் பயன்பாட்டில் உள்ளது / Taken'; }
+    else { el.style.color = 'var(--green)'; el.textContent = '✓ கிடைக்கிறது / Available'; }
+  }
+
+  // ============ REGISTER ============
+  async function doRegister() {
+    const name     = document.getElementById('r-name').value.trim();
+    const phone    = document.getElementById('r-phone').value.trim();
+    const username = document.getElementById('r-username').value.trim();
+    const password = document.getElementById('r-password').value;
+    const confirm  = document.getElementById('r-confirm').value;
+
+    // Validation
+    if (!name || !phone || !username || !password) return toast('அனைத்தையும் நிரப்பவும் / Fill all fields', 'error');
+    if (phone.length !== 10 || !/^\d+$/.test(phone)) return toast('சரியான phone number குடுங்கள் / Invalid phone', 'error');
+    if (username.length < 3) return toast('Username குறைந்தது 3 எழுத்து / Min 3 chars', 'error');
+    if (!/^[a-zA-Z0-9_]+$/.test(username)) return toast('Username: letters, numbers, _ மட்டுமே', 'error');
+    if (password.length < 6) return toast('Password குறைந்தது 6 எழுத்து / Min 6 chars', 'error');
+    if (password !== confirm) return toast('Passwords match ஆகவில்லை / Passwords do not match', 'error');
+
+    const btn = document.getElementById('registerBtn');
+    btn.classList.add('btn-loading');
+    btn.disabled = true;
+
+    try {
+      // ✅ API available-ஆ இருந்தா API use பண்ணு, இல்லன்னா localStorage fallback
+      let success = false;
+      let errorMsg = '';
+
+      try {
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, phone, username, password })
+        });
+        const data = await res.json();
+        if (data.success) {
+          success = true;
+        } else {
+          errorMsg = data.message || 'பயனர் பெயர் ஏற்கனவே உள்ளது / Username taken';
+        }
+      } catch (apiErr) {
+        // API இல்லன்னா localStorage-ல் save பண்ணு (offline mode)
+        const users = getUsers();
+        const exists = users.some(u => u.username.toLowerCase() === username.toLowerCase());
+        if (exists) {
+          errorMsg = 'பயனர் பெயர் ஏற்கனவே உள்ளது / Username already taken';
+        } else {
+          const newUser = { id: 'u_' + Date.now(), name, phone, username, password, createdAt: new Date().toISOString() };
+          users.push(newUser);
+          saveUsers(users);
+          success = true;
+        }
+      }
+
+      if (success) {
+        toast('பதிவு வெற்றி! இப்போது login செய்யவும் ✅', 'success');
+        setTimeout(() => go('s-login'), 1200);
+      } else {
+        shakeCard('s-register');
+        toast(errorMsg, 'error');
+      }
+    } finally {
+      btn.classList.remove('btn-loading');
+      btn.disabled = false;
+    }
+  }
+
+  // ============ USER LOGIN ============
+  async function doLogin() {
+    const username = document.getElementById('l-username').value.trim();
+    const password = document.getElementById('l-password').value;
+
+    if (!username || !password) return toast('அனைத்தையும் நிரப்பவும் / Fill all fields', 'error');
+
+    const btn = document.getElementById('loginBtn');
+    btn.classList.add('btn-loading');
+    btn.disabled = true;
+
+    try {
+      let loggedIn = false;
+      let userData = null;
+
+      // ✅ API try பண்ணு, fail-ஆனா localStorage fallback
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+        if (data.success && data.user) {
+          loggedIn = true;
+          userData = data.user;
+        }
+      } catch (apiErr) {
+        // API இல்லன்னா localStorage check
+        const user = getUsers().find(u =>
+          u.username.toLowerCase() === username.toLowerCase() && u.password === password
+        );
+        if (user) {
+          loggedIn = true;
+          userData = { username: user.username, name: user.name, id: user.id };
+        }
+      }
+
+      if (loggedIn && userData) {
+        setSession({ type: 'user', username: userData.username, name: userData.name, id: userData.id });
+        toast('வணக்கம் ' + userData.name + '! உள்நுழைவு வெற்றி ✓', 'success');
+        // Show user home briefly then redirect
+        document.getElementById('user-welcome-msg').textContent = 'வணக்கம், ' + userData.name + '!';
+        document.getElementById('user-uname-disp').textContent = userData.username;
+        document.getElementById('user-av').textContent = userData.name.charAt(0).toUpperCase();
+        go('s-userhome');
+        setTimeout(() => goToApp('home'), 1500);
+      } else {
+        shakeCard('s-login');
+        toast('பயனர் பெயர் அல்லது கடவுச்சொல் தவறு / Invalid credentials', 'error');
+      }
+    } finally {
+      btn.classList.remove('btn-loading');
+      btn.disabled = false;
+    }
+  }
+
+  // ============ ADMIN LOGIN ============
+  function doAdminLogin() {
+    console.log('doAdminLogin called'); // debug
+
+    const unameEl = document.getElementById('a-username');
+    const passEl  = document.getElementById('a-password');
+
+    if (!unameEl || !passEl) {
+      alert('Form elements not found!');
+      return;
+    }
+
+    const username = unameEl.value.trim();
+    const password = passEl.value;
+
+    console.log('username:', username, '| expected:', ADMIN_USER);
+    console.log('password match:', password === ADMIN_PASS);
+
+    if (!username || !password) {
+      toast('Username மற்றும் Password குடுங்கள் / Fill both fields', 'error');
+      return;
+    }
+
+    if (username === ADMIN_USER && password === ADMIN_PASS) {
+      setSession({ type: 'admin', username: 'admin' });
+      toast('Admin login successful! 🛡️', 'success');
+      showAdminHome();
+    } else {
+      shakeCard('s-admin');
+      toast('தவறான credentials / Invalid admin credentials ❌', 'error');
+      passEl.value = '';
+      passEl.focus();
+    }
+  }
+
+  // ============ ADMIN HOME ============
+  function showAdminHome() {
+    console.log('showAdminHome called');
+    const users = getUsers();
+    document.getElementById('admin-user-count').textContent = users.length;
+
+    let html = '';
+    if (users.length === 0) {
+      html = '<div class="empty-table">பதிவான பயனர்கள் இல்லை / No registered users yet</div>';
+    } else {
+      html = '<table class="user-table"><thead><tr><th>#</th><th>Name</th><th>Username</th><th>Phone</th><th>Role</th><th>Joined</th></tr></thead><tbody>';
+      users.forEach((u, i) => {
+        let dateStr = '-';
+        try { dateStr = new Date(u.createdAt).toLocaleDateString('ta-IN', { year: 'numeric', month: 'short', day: 'numeric' }); } catch(e) {}
+        html += '<tr>' +
+          '<td style="color:var(--text3);font-family:var(--font-en)">' + (i + 1) + '</td>' +
+          '<td>' + esc(u.name) + '</td>' +
+          '<td style="font-family:var(--font-en)">@' + esc(u.username) + '</td>' +
+          '<td style="font-family:var(--font-en)">' + esc(u.phone) + '</td>' +
+          '<td><span class="role-badge role-user">User</span></td>' +
+          '<td style="font-size:12px;color:var(--text3);font-family:var(--font-en)">' + dateStr + '</td>' +
+          '</tr>';
+      });
+      html += '</tbody></table>';
+    }
+    document.getElementById('admin-user-table-wrap').innerHTML = html;
+    go('s-adminhome');
+    console.log('Navigated to s-adminhome');
+  }
+
+  // ============ LOGOUT ============
+  function doLogout() {
+    clearSession();
+    go('s-landing');
+    toast('வெளியேறினீர்கள் / Logged out', 'info');
+  }
+
+  // ============ TOAST ============
+  function toast(msg, type = 'info') {
+    const wrap = document.getElementById('toastWrap');
+    const div = document.createElement('div');
+    div.className = 'toast ' + type;
+    const icons = { success: '✓', error: '✕', info: 'ℹ' };
+    div.innerHTML = '<span>' + (icons[type] || 'ℹ') + '</span><span>' + msg + '</span>';
+    wrap.appendChild(div);
+    setTimeout(() => { div.style.opacity = '0'; div.style.transition = 'opacity .3s'; }, 2800);
+    setTimeout(() => div.remove(), 3100);
+  }
+
+  // ============ SHAKE ============
+  function shakeCard(screenId) {
+    const card = document.querySelector('#' + screenId + ' .auth-card');
+    if (!card) return;
+    card.classList.remove('shake');
+    void card.offsetWidth;
+    card.classList.add('shake');
+    setTimeout(() => card.classList.remove('shake'), 500);
+  }
+
+  // ============ ESCAPE HTML ============
+  function esc(str) {
+    if (!str) return '';
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  // ============ AUTO SESSION CHECK (page load) ============
+  (function() {
+    const sess = getSession();
+    if (!sess) return;
+    if (sess.type === 'admin') {
+      showAdminHome();
+    } else if (sess.type === 'user') {
+      // Already logged in → main app-க்கு போ
+      window.location.href = MAIN_APP;
+    }
+  })();
+  
+</script>
+</body>
+<script src="app.js"></script>
+</html>
