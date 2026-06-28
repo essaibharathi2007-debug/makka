@@ -26,19 +26,19 @@ ward: {
   category: {
     type: String,
     required: true,
-    enum: [
-  'சாலை',
-  'குடிநீர்',
-  'மின்சாரம்',
-  'குப்பை',
-  'கழிவுநீர்',
-  'தெருவிளக்கு',
-  'ஒலி மாசு',
-  'சுற்றுச்சூழல் மாசு',
-  'ஊழல்',
-  'சுகாதாரம்',
-  'போக்குவரத்து',
-  'மற்றவை'
+  enum: [
+  'road',
+  'water',
+  'electricity',
+  'garbage',
+  'drainage',
+  'streetlight',
+  'noise',
+  'pollution',
+  'corruption',
+  'health',
+  'transport',
+  'other'
 ]
   },
   title: { type: String, required: true, trim: true },
