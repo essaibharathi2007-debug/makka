@@ -7,7 +7,8 @@ const path = require('path');
 const rateLimit = require('express-rate-limit');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
+app.set('trust proxy', 1); // ← இந்த line add பண்ணுங்க
 
 // Security middleware
 app.use(helmet({ contentSecurityPolicy: false }));
