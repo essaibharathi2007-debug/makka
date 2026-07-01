@@ -648,6 +648,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function handleSubmit(e) {
   e.preventDefault();
+  const form = e.target;
   const btn = document.getElementById('submitBtn');
   btn.disabled = true;
   btn.innerHTML = '<span>⏳ அனுப்புகிறோம்...</span>';
