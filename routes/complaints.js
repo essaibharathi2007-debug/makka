@@ -112,7 +112,8 @@ router.post('/', uploadFields, async (req, res) => {
       title: normalizedTitle,
       description: description.trim(),
       voiceNote: req.files?.voiceNote?.[0]?.filename || null,
-      images: req.files?.images?.map(f => f.filename) || []
+      images: req.files?.images?.map(f => f.filename) || [],
+      upvotedPhones: [(phone || '').trim()]
     };
 
     const existing = await Complaint.findOne({
@@ -122,9 +123,9 @@ router.post('/', uploadFields, async (req, res) => {
     });
 
     if (existing) {
-      const ip = req.ip || req.connection.remoteAddress;
+      const normalizedPhone = (phone || '').trim();
 
-      if (existing.upvotedIPs && existing.upvotedIPs.includes(ip)) {
+      if (existing.upvotedPhones && existing.upvotedPhones.includes(normalizedPhone)) {
         return res.json({
           success: true,
           duplicate: true,
@@ -138,8 +139,8 @@ router.post('/', uploadFields, async (req, res) => {
       }
 
       existing.upvotes = (existing.upvotes || 0) + 1;
-      if (!existing.upvotedIPs) existing.upvotedIPs = [];
-      existing.upvotedIPs.push(ip);
+      if (!existing.upvotedPhones) existing.upvotedPhones = [];
+      existing.upvotedPhones.push(normalizedPhone);
       await existing.save();
 
       return res.json({
