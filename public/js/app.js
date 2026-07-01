@@ -675,7 +675,7 @@ async function handleSubmit(e) {
     if (data.success) {
 
   if (data.duplicate) {
-    showToast("Already complaint exists — vote added 👍", "info");
+    showToast("இந்த புகார் ஏற்கனவே பதிவு செய்யப்பட்டுள்ளது. உங்கள் வாக்கு சேர்க்கப்பட்டது! 👍", "info");
   } else {
     document.getElementById('successComplaintId').textContent = data.complaintId;
     showModal('successModal');
