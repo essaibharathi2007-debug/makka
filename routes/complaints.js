@@ -100,7 +100,11 @@ router.post('/', uploadFields, async (req, res) => {
     }
 
     const complaintId = await Complaint.generateId();
-    const normalizedTitle = (title || '').trim().toLowerCase();
+    const normalizedTitle = (title || '')
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, ' ')
+      .replace(/[^\w\s\u0B80-\u0BFF]/g, '');
 
     const data = {
       ...req.body,
@@ -112,9 +116,6 @@ router.post('/', uploadFields, async (req, res) => {
     };
 
     const existing = await Complaint.findOne({
-      category,
-      street,
-      ward,
       title: normalizedTitle
     });
 
@@ -125,7 +126,11 @@ router.post('/', uploadFields, async (req, res) => {
       return res.json({
         success: true,
         duplicate: true,
-        complaintId: existing.complaintId
+        complaintId: existing.complaintId,
+        upvotes: existing.upvotes,
+        message: language === 'tamil'
+          ? 'இந்த புகார் ஏற்கனவே பதிவு செய்யப்பட்டுள்ளது. உங்கள் வாக்கு (vote) சேர்க்கப்பட்டது!'
+          : 'This complaint already exists. Your vote has been added!'
       });
     }
 
