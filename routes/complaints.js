@@ -275,18 +275,25 @@ router.get('/:id', async (req, res) => {
 router.post('/:id/upvote', async (req, res) => {
   try {
     const ip = req.ip || req.connection.remoteAddress;
+
+    // Atomic: only increments if this IP is NOT already in upvotedIPs.
+    // This avoids the race condition where two rapid clicks both pass
+    // the "already voted" check before either write completes.
+    const updated = await Complaint.findOneAndUpdate(
+      { _id: req.params.id, upvotedIPs: { $ne: ip } },
+      { $inc: { upvotes: 1 }, $push: { upvotedIPs: ip } },
+      { new: true }
+    );
+
+    if (updated) {
+      return res.json({ success: true, upvotes: updated.upvotes });
+    }
+
+    // Either the complaint doesn't exist, or this IP already voted.
     const complaint = await Complaint.findById(req.params.id);
     if (!complaint) return res.status(404).json({ success: false, message: 'Not found' });
 
-    if (complaint.upvotedIPs.includes(ip)) {
-      return res.json({ success: false, message: 'Already upvoted', upvotes: complaint.upvotes });
-    }
-
-    complaint.upvotes += 1;
-    complaint.upvotedIPs.push(ip);
-    await complaint.save();
-
-    res.json({ success: true, upvotes: complaint.upvotes });
+    return res.json({ success: false, message: 'Already upvoted', upvotes: complaint.upvotes });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
