@@ -116,11 +116,30 @@ router.post('/', uploadFields, async (req, res) => {
     };
 
     const existing = await Complaint.findOne({
-      title: normalizedTitle
+      title: normalizedTitle,
+      category,
+      ward
     });
 
     if (existing) {
+      const ip = req.ip || req.connection.remoteAddress;
+
+      if (existing.upvotedIPs && existing.upvotedIPs.includes(ip)) {
+        return res.json({
+          success: true,
+          duplicate: true,
+          alreadyVoted: true,
+          complaintId: existing.complaintId,
+          upvotes: existing.upvotes,
+          message: language === 'tamil'
+            ? 'இந்த புகார் ஏற்கனவே பதிவு செய்யப்பட்டுள்ளது. நீங்கள் ஏற்கனவே வாக்களித்துவிட்டீர்கள்.'
+            : 'This complaint already exists. You have already voted for it.'
+        });
+      }
+
       existing.upvotes = (existing.upvotes || 0) + 1;
+      if (!existing.upvotedIPs) existing.upvotedIPs = [];
+      existing.upvotedIPs.push(ip);
       await existing.save();
 
       return res.json({
