@@ -365,10 +365,17 @@
 <!-- DETAIL MODAL -->
 <div id="detailModal" class="modal hidden">
   <div class="modal-box detail-box">
+    <!-- ✅ WhatsApp Share Icon — visible ONLY for Admin session (toggled in app.js) -->
+    <button id="whatsappShareBtn" class="whatsapp-share-btn" style="display:none" onclick="shareComplaintOnWhatsApp()" title="WhatsApp-ல் பகிர் / Share on WhatsApp">
+      <svg viewBox="0 0 32 32" width="18" height="18" fill="currentColor"><path d="M16.001 3C9.373 3 4 8.373 4 15c0 2.386.7 4.61 1.902 6.478L4 29l7.72-1.87A11.94 11.94 0 0 0 16.001 27C22.628 27 28 21.627 28 15S22.628 3 16.001 3zm0 21.818a9.77 9.77 0 0 1-4.98-1.363l-.357-.212-4.584 1.11 1.127-4.462-.233-.366A9.78 9.78 0 0 1 6.182 15c0-5.421 4.398-9.818 9.819-9.818 5.42 0 9.818 4.397 9.818 9.818 0 5.42-4.398 9.818-9.818 9.818zm5.393-7.35c-.295-.148-1.746-.862-2.017-.96-.27-.099-.467-.148-.664.148-.197.295-.762.96-.934 1.157-.172.197-.344.222-.639.074-.295-.148-1.245-.459-2.372-1.463-.877-.782-1.47-1.748-1.642-2.043-.172-.295-.018-.454.13-.601.134-.133.295-.345.443-.517.148-.172.197-.295.295-.492.099-.197.05-.369-.025-.517-.074-.148-.664-1.6-.91-2.191-.24-.576-.483-.498-.664-.507l-.566-.01c-.197 0-.517.074-.787.369-.27.295-1.032 1.009-1.032 2.461 0 1.452 1.057 2.855 1.204 3.052.148.197 2.08 3.176 5.037 4.454.704.304 1.253.486 1.681.622.706.224 1.348.192 1.856.117.566-.084 1.746-.714 1.992-1.403.246-.69.246-1.28.172-1.403-.074-.123-.27-.197-.566-.345z"/></svg>
+    </button>
     <button class="modal-close" onclick="closeDetail()">✕</button>
     <div id="detailContent"></div>
   </div>
 </div>
+
+<!-- ✅ html2canvas library — required for WhatsApp image share feature -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <div class="modal-overlay hidden" id="modalOverlay" onclick="closeModals()"></div>
 

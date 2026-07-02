@@ -266,12 +266,88 @@ async function openDetail(id) {
   overlay.classList.remove('hidden');
   content.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
   setTimeout(() => modal.classList.add('show'), 10);
+
+  // ✅ Show WhatsApp share icon only when logged-in user is Admin
+  const waBtn = document.getElementById('whatsappShareBtn');
+  if (waBtn) {
+    let sess = null;
+    try { sess = JSON.parse(localStorage.getItem('mk_session') || 'null'); } catch (e) {}
+    waBtn.style.display = (sess && sess.type === 'admin') ? 'flex' : 'none';
+  }
+
   try {
     const res = await fetch(`${API}/complaints/${id}`);
     const data = await res.json();
     if (data.success) content.innerHTML = renderDetail(data.complaint);
   } catch (e) {
     content.innerHTML = '<p>Error loading complaint</p>';
+  }
+}
+
+// ======= ✅ WHATSAPP SHARE (Admin only) =======
+// Captures the complaint detail popup as a PNG image and shares it via
+// the Web Share API so the admin can pick WhatsApp from the native share sheet.
+async function shareComplaintOnWhatsApp() {
+  // Double-check admin session before doing any work
+  let sess = null;
+  try { sess = JSON.parse(localStorage.getItem('mk_session') || 'null'); } catch (e) {}
+  if (!sess || sess.type !== 'admin') {
+    alert('⛔ Admin access only! / நிர்வாகர் மட்டுமே பகிர முடியும்');
+    return;
+  }
+
+  if (typeof html2canvas === 'undefined') {
+    alert('⚠️ html2canvas library ஏற்றப்படவில்லை. / html2canvas library failed to load.');
+    return;
+  }
+
+  const waBtn = document.getElementById('whatsappShareBtn');
+  const captureEl = document.getElementById('detailContent');
+  if (!captureEl) return;
+
+  const originalBtnHTML = waBtn ? waBtn.innerHTML : null;
+  if (waBtn) { waBtn.disabled = true; waBtn.innerHTML = '⏳'; }
+
+  try {
+    // High-quality capture (scale 2 = ~2x resolution PNG)
+    const canvas = await html2canvas(captureEl, {
+      scale: 2,
+      backgroundColor: getComputedStyle(document.body).getPropertyValue('--surface') || '#ffffff',
+      useCORS: true
+    });
+
+    canvas.toBlob(async (blob) => {
+      if (!blob) {
+        alert('⚠️ படம் உருவாக்க முடியவில்லை. / Could not generate image.');
+        if (waBtn) { waBtn.disabled = false; waBtn.innerHTML = originalBtnHTML; }
+        return;
+      }
+
+      const fileName = `complaint-${Date.now()}.png`;
+      const file = new File([blob], fileName, { type: 'image/png' });
+
+      // Web Share API with file support (image only, no text/URL)
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({ files: [file] });
+        } catch (shareErr) {
+          // User cancelled share sheet — not an error to alert about
+          if (shareErr.name !== 'AbortError') {
+            alert('⚠️ பகிர முடியவில்லை. / Sharing failed.');
+          }
+        }
+      } else {
+        // ✅ Fallback message when Web Share API (with files) is not supported
+        alert('⚠️ இந்த சாதனம்/உலாவி படம் பகிர்வதை ஆதரிக்கவில்லை. WhatsApp Web/App மூலம் நேரடியாக பகிரவும்.\n\n⚠️ Image sharing is not supported on this device/browser. Please share the image manually via WhatsApp.');
+      }
+
+      if (waBtn) { waBtn.disabled = false; waBtn.innerHTML = originalBtnHTML; }
+    }, 'image/png', 1.0);
+
+  } catch (err) {
+    console.error('WhatsApp share error:', err);
+    alert('⚠️ படம் எடுக்க முடியவில்லை. / Could not capture complaint image.');
+    if (waBtn) { waBtn.disabled = false; waBtn.innerHTML = originalBtnHTML; }
   }
 }
 

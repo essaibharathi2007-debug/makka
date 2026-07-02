@@ -65,6 +65,7 @@ ward: {
   upvotes: { type: Number, default: 0 },
   upvotedIPs: [{ type: String }],
   views: { type: Number, default: 0 },
+  upvotedPhones: [{ type: String }],
 
   // Admin response
   adminResponse: { type: String, default: '' },

@@ -431,6 +431,17 @@ body {
 .modal-close:hover { background: var(--red); color: white; border-color: var(--red); }
 .detail-box { position: relative; max-width: 640px; text-align: left; max-height: 85vh; overflow-y: auto; }
 
+/* ✅ WhatsApp Share Button (Admin-only, inside Complaint Detail popup) */
+.whatsapp-share-btn {
+  position: absolute; top: 16px; right: 58px;
+  background: #25D366; border: 1px solid #25D366;
+  color: #fff; width: 32px; height: 32px; border-radius: 50%;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all .2s; box-shadow: 0 2px 8px rgba(37,211,102,0.4);
+}
+.whatsapp-share-btn:hover { background: #1ebe57; border-color: #1ebe57; transform: scale(1.08); }
+.whatsapp-share-btn:disabled { opacity: 0.6; cursor: wait; transform: none; }
+
 /* ======= TRACK PAGE ======= */
 .track-container { max-width: 640px; margin: 0 auto; padding: 40px 24px; }
 .track-container h2 { font-size: 28px; font-weight: 700; margin: 16px 0 28px; }
