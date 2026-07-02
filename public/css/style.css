@@ -666,6 +666,13 @@ body {
 
 /* ===== Small Mobile ===== */
 @media (max-width:480px){
-    .hero-image img{ width:80%; max-width:200px; }
-    .hero-banner{ width:80%; max-width:200px; }
+    .hero-image img{
+        width:95%;
+        max-width:300px;
+    }
+
+    .hero-banner{
+        width:95%;
+        max-width:300px;
+    }
 }
