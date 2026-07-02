@@ -649,10 +649,19 @@ body {
         padding:30px 20px;
         gap:25px;
     }
+
     .hero-image{ order:1; }
     .hero-content{ order:2; max-width:100%; }
-    .hero-image img{ width:70%; max-width:250px; }
-    .hero-banner{ width:70%; max-width:250px; }
+
+    .hero-image img{
+        width:95%;
+        max-width:340px;
+    }
+
+    .hero-banner{
+        width:95%;
+        max-width:340px;
+    }
 }
 
 /* ===== Small Mobile ===== */
